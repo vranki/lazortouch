@@ -6,10 +6,10 @@ DbusApi::DbusApi(QObject *rootObj) : QObject() {
     qmlRootObject = rootObj;
 }
 
-void DbusApi::playFile(const QString &filename)
+void DbusApi::playFile(const int filenum)
 {
-    qDebug() << Q_FUNC_INFO << filename;
+    qDebug() << Q_FUNC_INFO << filenum;
 
     QMetaObject::invokeMethod(qmlRootObject, "playFile",
-            Q_ARG(QVariant, filename));
+            Q_ARG(QVariant, filenum));
 }

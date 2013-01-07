@@ -18,7 +18,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QDBusConnection connection = QDBusConnection::sessionBus();
     Q_ASSERT(connection.isConnected());
     bool ret = false;
-    ret = connection.registerObject("/", &dbusApi, QDBusConnection::ExportAllSlots);
+    ret = connection.registerObject("/player", &dbusApi, QDBusConnection::ExportAllSlots);
     Q_ASSERT(ret);
     ret = connection.registerService("org.hs5w.VideoPlayer");
     Q_ASSERT(ret);

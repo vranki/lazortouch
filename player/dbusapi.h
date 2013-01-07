@@ -16,7 +16,7 @@ public:
     explicit DbusApi(QObject *rootObj);
 
 public slots:
-    void playFile(const QString &filename);
+    void playFile(const int filenum);
 private:
     QObject *qmlRootObject;
 };
