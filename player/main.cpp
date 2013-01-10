@@ -1,6 +1,9 @@
 #include <QtGui/QApplication>
 #include <QDBusConnection>
 #include <QGraphicsObject>
+#include <QDebug>
+#include <QDir>
+#include <QFile>
 #include "qmlapplicationviewer.h"
 #include "dbusapi.h"
 
@@ -22,5 +25,24 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     Q_ASSERT(ret);
     ret = connection.registerService("org.hs5w.VideoPlayer");
     Q_ASSERT(ret);
+
+    QString videoPath = "../../../videos";
+    if(argc>=2) videoPath = argv[1];
+
+    qDebug() << Q_FUNC_INFO << "Looking for videos in" << videoPath;
+    viewer.rootObject()->setProperty("videoPath", videoPath);
+
+    int fileCount = 0;
+    QFile videoFile;
+    do {
+        videoFile.setFileName(videoPath + "/" + QString().number(fileCount+1));
+        if(videoFile.exists()) {
+            qDebug() << Q_FUNC_INFO << "Found file " + videoFile.fileName();
+            fileCount++;
+        }
+    } while(videoFile.exists());
+    qDebug() << Q_FUNC_INFO << "File count is " << fileCount << viewer.rootObject()->property("videoCount").toInt();
+    viewer.rootObject()->setProperty("videoCount", fileCount);
+
     return app->exec();
 }

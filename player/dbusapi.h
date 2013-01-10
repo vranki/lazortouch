@@ -5,7 +5,7 @@
 
 /*
 To command:
-dbus-send --type=method_call --print-reply  --dest=org.hs5w.VideoPlayer / org.hs5w.VideoPlayer.playFile string:'kek'
+dbus-send --type=method_call --print-reply  --dest=org.hs5w.VideoPlayer /player org.hs5w.VideoPlayer.playFile int32:'1'
 */
 
 class DbusApi : public QObject
