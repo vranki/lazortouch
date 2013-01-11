@@ -7,15 +7,14 @@
 #include "qmlapplicationviewer.h"
 #include "dbusapi.h"
 
-Q_DECL_EXPORT int main(int argc, char *argv[])
-{
+Q_DECL_EXPORT int main(int argc, char *argv[]) {
     QScopedPointer<QApplication> app(createApplication(argc, argv));
 
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/videoplayer/main.qml"));
     viewer.showExpanded();
-//    viewer.showFullScreen();
+    viewer.showFullScreen();
 
     DbusApi dbusApi(viewer.rootObject());
 
@@ -27,11 +26,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     ret = connection.registerService("org.hs5w.VideoPlayer");
     Q_ASSERT(ret);
 
-    QString videoPath = "../videos";
+    QString videoPath = "qml/videoplayer/videos";
     if(argc>=2) videoPath = argv[1];
 
     qDebug() << Q_FUNC_INFO << "Looking for videos in" << videoPath;
-    viewer.rootObject()->setProperty("videoPath", videoPath);
+    viewer.rootObject()->setProperty("videoPath", "videos");
 
     int fileCount = 0;
     QFile videoFile;
@@ -42,7 +41,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
             fileCount++;
         }
     } while(videoFile.exists());
-    qDebug() << Q_FUNC_INFO << "File count is " << fileCount << viewer.rootObject()->property("videoCount").toInt();
+    qDebug() << Q_FUNC_INFO << "File count is " << fileCount;
     viewer.rootObject()->setProperty("videoCount", fileCount);
 
     return app->exec();

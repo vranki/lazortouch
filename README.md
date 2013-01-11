@@ -6,26 +6,27 @@ Laser scanner controlled multimedia player
 setting up
 ==========
 
-Make directory 'videos' under this directory and copy
+Make directory 'videos' under player/qml/videoplayer and copy
 video files in it. Rename the videos to be numbers, no file
-suffix.
+suffix. Add overlay images as PNG.
 
 Example:
 
-$ ls videos
-1  2
+$ ls lazortouch/player/qml/videoplayer/videos/
+1  1.png  2  2.png  3  3.png
+
 
 Symlinks should also work..
+
+compiling
+=========
+
+cd player
+qmake
+make
 
 running
 =======
 
-Start main.py.
-
-Press a number to play a video file. 
-
-Press f to toggle fullscreen.
-
-Press q to quit.
-
+./player
 

@@ -16,7 +16,7 @@ Rectangle {
                 state = "CHANGING_SOON"
                 nextVideoTimer.restart()
             } else {
-                videoElement.source = "../../" + videoPath + "/" + nextVideoNum
+                videoElement.source = videoPath + "/" + nextVideoNum
                 state = "PLAYING"
                 videoElement.playing = true
             }
@@ -63,7 +63,7 @@ Rectangle {
                 id: videoSwitchAnimation
                 running: false
                 NumberAnimation { target: videoElement; property: "opacity"; to: 0; duration: 1000 }
-                PropertyAction { target: videoElement; property: "source"; value: "../../" + videoPath + "/" + nextVideoNum }
+                PropertyAction { target: videoElement; property: "source"; value: videoPath + "/" + nextVideoNum }
                 PropertyAction { target: videoPlayer; property: "state"; value: "PLAYING" }
             }
         }
@@ -74,10 +74,15 @@ Rectangle {
         anchors.fill: parent
         focus: true
         volume: opacity
+        onStopped: {
+            var nextVideo = nextVideoNum + 1
+            if(nextVideo > videoCount) nextVideo = 1
+            playFile(nextVideo)
+        }
     }
     Image {
         id: overlayImage
-        source: "overlay.png"
+        source: videoPath + "/" + nextVideoNum + ".png"
         z: 10
     }
     Timer {
