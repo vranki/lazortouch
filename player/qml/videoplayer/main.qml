@@ -10,8 +10,8 @@ Rectangle {
 
     function playFile(filenum) {
         if(nextVideoNum == filenum) return;
-        nextVideoNum = filenum
         if(filenum > 0) {
+            nextVideoNum = filenum
             if(videoElement.playing) {
                 state = "CHANGING_SOON"
                 nextVideoTimer.restart()
@@ -74,10 +74,12 @@ Rectangle {
         anchors.fill: parent
         focus: true
         volume: opacity
-        onStopped: {
-            var nextVideo = nextVideoNum + 1
-            if(nextVideo > videoCount) nextVideo = 1
-            playFile(nextVideo)
+        onStatusChanged: {
+            if(status == Video.EndOfMedia) {
+                var nextVideo = nextVideoNum + 1
+                if(nextVideo > videoCount) nextVideo = 1
+                playFile(nextVideo)
+            }
         }
     }
     Image {
