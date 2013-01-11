@@ -15,6 +15,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/videoplayer/main.qml"));
     viewer.showExpanded();
+//    viewer.showFullScreen();
 
     DbusApi dbusApi(viewer.rootObject());
 
@@ -26,7 +27,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     ret = connection.registerService("org.hs5w.VideoPlayer");
     Q_ASSERT(ret);
 
-    QString videoPath = "../../../videos";
+    QString videoPath = "../videos";
     if(argc>=2) videoPath = argv[1];
 
     qDebug() << Q_FUNC_INFO << "Looking for videos in" << videoPath;
