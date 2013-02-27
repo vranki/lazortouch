@@ -14,7 +14,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[]) {
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/videoplayer/main.qml"));
     viewer.showExpanded();
-//    viewer.showFullScreen();
+    viewer.showFullScreen();
 
     DbusApi dbusApi(viewer.rootObject());
 
@@ -43,6 +43,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[]) {
     } while(videoFile.exists());
     qDebug() << Q_FUNC_INFO << "File count is " << fileCount;
     viewer.rootObject()->setProperty("videoCount", fileCount);
-
+    if(fileCount)
+        dbusApi.playFile(1);
     return app->exec();
 }
