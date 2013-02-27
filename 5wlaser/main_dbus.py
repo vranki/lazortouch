@@ -1,10 +1,13 @@
-# you will need python 2.x and pygame 
+#!/usr/bin/env python
+
 import pygame
 from pygame.locals import *
 from math import *
 import time
 import copy
 import dbus
+
+# you will need python 2.x and pygame 
 
 import sick_interface2
 reload(sick_interface2)

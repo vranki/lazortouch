@@ -14,7 +14,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[]) {
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/videoplayer/main.qml"));
     viewer.showExpanded();
-    viewer.showFullScreen();
+//    viewer.showFullScreen();
 
     DbusApi dbusApi(viewer.rootObject());
 

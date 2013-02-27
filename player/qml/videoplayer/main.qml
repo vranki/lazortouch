@@ -84,7 +84,7 @@ Rectangle {
     }
     Image {
         id: overlayImage
-        source: videoPath + "/" + nextVideoNum + ".png"
+        source: nextVideoNum ? videoPath + "/" + nextVideoNum + ".png" : ""
         z: 10
     }
     Timer {
@@ -94,5 +94,11 @@ Rectangle {
             state = "CHANGING"
         }
     }
+    StatusDisplay {
+        text: "State: " + videoPlayer.state
+        z: 20
+        anchors.bottom: parent.bottom
+    }
+
     Keys.onEscapePressed: Qt.quit()
 }
