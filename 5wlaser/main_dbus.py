@@ -6,6 +6,7 @@ from math import *
 import time
 import copy
 import dbus
+import sys
 
 # you will need python 2.x and pygame 
 
@@ -59,11 +60,19 @@ def draw_circles(screen, circles, pressed, scale, x_offset, y_offset):
 ## main
 #########################################################################
 
+if len(sys.argv) > 1 and sys.argv[1] == "-nographics":
+    graphics = False
+else:
+    graphics = True
+
+
 pygame.init()
 x_size_pix = 1000
 y_size_pix = 700
-screen = pygame.display.set_mode((x_size_pix, y_size_pix))
-screen.fill((250,250,250))
+
+if graphics:
+    screen = pygame.display.set_mode((x_size_pix, y_size_pix))
+    screen.fill((250,250,250))
 
 x_offset = x_size_pix/2
 y_offset = 0
@@ -73,7 +82,7 @@ clock = pygame.time.Clock()
 
 print "Starting..."
 
-my_laser = sick_dummy.SICK()
+my_laser = sick_interface2.SICK()
 
 print "Laser initialized"
 
@@ -125,19 +134,20 @@ while running:
 
     if old_activation != activation:
 #        iface.PlayFile(activation)
-        remote_object.playFile(activation)
+        remote_object.playFile(int(activation))
         print "change video to", activation
         old_activation = activation
 
-    screen.fill((250,250,250))
+    if graphics:
+        screen.fill((250,250,250))
 
-    draw_box(screen, bounding_box, scale, x_offset, y_offset)
-    draw_circles(screen, circles, pressed, scale, x_offset, y_offset)
-    draw_laser_data(screen, laser_meas, scale, x_offset, y_offset) 
+        draw_box(screen, bounding_box, scale, x_offset, y_offset)
+        draw_circles(screen, circles, pressed, scale, x_offset, y_offset)
+        draw_laser_data(screen, laser_meas, scale, x_offset, y_offset) 
 
-    pygame.draw.circle(screen, (0,0,255), mouse_pos_pix, 2)     
+        pygame.draw.circle(screen, (0,0,255), mouse_pos_pix, 2)     
     
-    pygame.display.flip()
+        pygame.display.flip()
 
 my_laser.close_connection()
 pygame.quit()
