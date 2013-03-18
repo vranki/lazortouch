@@ -13,8 +13,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[]) {
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/videoplayer/main.qml"));
-    viewer.showExpanded();
-    viewer.showFullScreen();
+    //viewer.showExpanded();
+    //viewer.showFullScreen();
+    viewer.setWindowFlags(Qt::FramelessWindowHint);
+    viewer.show();
+//    viewer.setGeometry(QRect(0,0,3864, 2180));
+//    viewer.setGeometry(QRect(10,0,3840, 2160));
 
     DbusApi dbusApi(viewer.rootObject());
 

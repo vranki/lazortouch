@@ -10,7 +10,7 @@ Rectangle {
 
     function playFile(filenum) {
         // Ignore if video is already queued or playing
-        if(filenum == currentVideoNum || filenum == nextVideoSelected || filenum > videoCount+1) return;
+        if(filenum == currentVideoNum || filenum == nextVideoSelected || filenum > videoCount) return;
 
         if(filenum > 0) {
             if(videoElement.playing) {
@@ -111,7 +111,7 @@ Rectangle {
         }
     }
     StatusDisplay {
-        visible: true
+        visible: false
         text: "State: " + videoPlayer.state + " " + currentVideoNum + " selected " + nextVideoSelected + " master vol " + videoMasterVolume
         z: 20
         anchors.bottom: parent.bottom
