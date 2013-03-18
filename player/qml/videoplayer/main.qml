@@ -10,7 +10,7 @@ Rectangle {
 
     function playFile(filenum) {
         // Ignore if video is already queued or playing
-        if(filenum == currentVideoNum || filenum == nextVideoSelected || filenum > videoCount+1) return;
+        if(filenum == currentVideoNum || filenum == nextVideoSelected || filenum > videoCount) return;
 
         if(filenum > 0) {
             if(videoElement.playing) {
@@ -52,12 +52,13 @@ Rectangle {
         State {
             name: "CHANGING_SOON"
             PropertyChanges { target: overlayImage; opacity: 1 }
-            PropertyChanges { target: videoElement; playing: true }
+            PropertyChanges { target: videoElement; opacity: 0 }
+            PropertyChanges { target: videoElement; playing: false }
         },
         State {
             name: "CHANGING"
             PropertyChanges { target: videoElement; opacity: 0 }
-            PropertyChanges { target: videoElement; playing: true }
+            PropertyChanges { target: videoElement; playing: false }
         }
     ]
     transitions: [
@@ -72,7 +73,7 @@ Rectangle {
             SequentialAnimation {
                 id: videoSwitchAnimation
                 running: false
-                NumberAnimation { target: videoElement; property: "opacity"; to: 0; duration: 1000 }
+                NumberAnimation { target: videoElement; property: "opacity"; to: 0; duration: 1 }
                 PropertyAction { target: videoElement; property: "source"; value: videoPath + "/" + currentVideoNum }
                 PropertyAction { target: videoPlayer; property: "state"; value: "PLAYING" }
             }
@@ -84,6 +85,7 @@ Rectangle {
         anchors.fill: parent
         focus: true
         volume: Math.min(opacity, videoMasterVolume)
+//	opacity: 1 - overlayImage.opacity
         onStatusChanged: {
             if(status == Video.EndOfMedia) { // skip to next video when end is reached, or loop
                 opacity = 0;
@@ -103,7 +105,7 @@ Rectangle {
     }
     Timer {
         id: nextVideoTimer
-        interval: 2000
+        interval: 3000
         onTriggered: {
             currentVideoNum = nextVideoSelected;
             nextVideoSelected = 0;
@@ -111,7 +113,7 @@ Rectangle {
         }
     }
     StatusDisplay {
-        visible: true
+        visible: false
         text: "State: " + videoPlayer.state + " " + currentVideoNum + " selected " + nextVideoSelected + " master vol " + videoMasterVolume
         z: 20
         anchors.bottom: parent.bottom
