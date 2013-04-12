@@ -1,21 +1,22 @@
 import QtQuick 1.1
 import Qt 4.7
 import QtMultimediaKit 1.1
+
 Rectangle {
     id: videoPlayer
     width: 640
     height: 400
     color: "black"
     state: "STOPPED"
+    property int screensaver_video: 99
 
     function playFile(filenum) {
         // Ignore if video is already queued or playing
-        if(filenum == currentVideoNum || filenum == nextVideoSelected || filenum > videoCount) return;
+        if(filenum == currentVideoNum || filenum == nextVideoSelected || (filenum != screensaver_video && filenum > videoCount)) return;
 
         if(filenum > 0) {
             if(videoElement.playing) {
                 nextVideoSelected = filenum
-                videoMasterVolume = 1
                 state = "CHANGING_SOON"
                 nextVideoTimer.restart()
             } else {
@@ -29,10 +30,10 @@ Rectangle {
             nextVideoTimer.stop()
         }
     }
+
     property int nextVideoSelected: 0
     property int currentVideoNum: 0
     property int videoCount: 0
-    property double videoMasterVolume: 1
     property string videoPath: ""
 
     onStateChanged: console.log("State: " + state)
@@ -66,9 +67,6 @@ Rectangle {
             NumberAnimation { target: overlayImage; properties: "opacity"; easing.type: Easing.InOutExpo; duration: 1000 }
         },
         Transition {
-            NumberAnimation { target: videoPlayer; properties: "videoMasterVolume"; easing.type: Easing.InOutExpo; duration: 1000 }
-        },
-        Transition {
             to: "CHANGING"
             SequentialAnimation {
                 id: videoSwitchAnimation
@@ -84,17 +82,15 @@ Rectangle {
         id: videoElement
         anchors.fill: parent
         focus: true
-        volume: Math.min(opacity, videoMasterVolume)
-//	opacity: 1 - overlayImage.opacity
-        onStatusChanged: {
-            if(status == Video.EndOfMedia) { // skip to next video when end is reached, or loop
-                opacity = 0;
-                var nextVideo = currentVideoNum + 1
-                if(nextVideo > videoCount) nextVideo = 1
-                playFile(nextVideo)
 
-                if(videoMasterVolume >= 0.2)
-                    videoMasterVolume -= 0.2
+        onStatusChanged: {
+            if(status == Video.EndOfMedia) { // Play screensaver video
+                if(currentVideoNum == screensaver_video) {
+                    play() // Loop
+                } else {
+                    opacity = 0;
+                    playFile(screensaver_video)
+                }
             }
         }
     }
@@ -114,10 +110,11 @@ Rectangle {
     }
     StatusDisplay {
         visible: false
-        text: "State: " + videoPlayer.state + " " + currentVideoNum + " selected " + nextVideoSelected + " master vol " + videoMasterVolume
+        text: "State: " + videoPlayer.state + " " + currentVideoNum + " selected " + nextVideoSelected
         z: 20
         anchors.bottom: parent.bottom
     }
 
     Keys.onEscapePressed: Qt.quit()
+    Keys.onRightPressed: videoElement.position = videoElement.duration - 3000 // Seek to end of video
 }
