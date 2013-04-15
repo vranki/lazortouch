@@ -14,15 +14,9 @@ Rectangle {
         // Ignore if video is already queued or playing
         if(filenum == currentVideoNum || filenum == nextVideoSelected || (filenum != screensaver_video && filenum > videoCount)) return;
         if(filenum > 0) {
-            if(videoElement.playing) {
-                nextVideoSelected = filenum
-                state = "CHANGING_SOON"
-                nextVideoTimer.restart()
-            } else {
-                currentVideoNum = filenum;
-                videoElement.source = videoPath + "/" + currentVideoNum
-                state = "CHANGING"
-            }
+            nextVideoTimer.restart()
+            nextVideoSelected = filenum
+            state = "CHANGING_SOON"
         } else {
             state = "PLAYING"
             nextVideoSelected = 0;
@@ -47,23 +41,27 @@ Rectangle {
             name: "PLAYING"
             PropertyChanges { target: videoElement; playing: true }
             PropertyChanges { target: overlayImage; opacity: 0 }
+            PropertyChanges { target: videoElement; volume: 1 }
             PropertyChanges { target: videoElement; opacity: 1 }
         },
         State {
             name: "CHANGING_SOON"
             PropertyChanges { target: overlayImage; opacity: 1 }
             PropertyChanges { target: videoElement; opacity: 0 }
-            PropertyChanges { target: videoElement; playing: false }
+            PropertyChanges { target: videoElement; volume: 0 }
+            PropertyChanges { target: videoElement; playing: true }
         },
         State {
             name: "CHANGING"
             PropertyChanges { target: videoElement; opacity: 0 }
             PropertyChanges { target: videoElement; playing: false }
+            PropertyChanges { target: videoElement; volume: 0 }
         }
     ]
     transitions: [
         Transition {
             NumberAnimation { target: overlayImage; properties: "opacity"; easing.type: Easing.InOutExpo; duration: 1000 }
+            NumberAnimation { target: videoElement; properties: "volume"; easing.type: Easing.InOut; duration: 100 }
         },
         Transition {
             to: "CHANGING"
@@ -108,7 +106,7 @@ Rectangle {
     }
     StatusDisplay {
         visible: false
-        text: "State: " + videoPlayer.state + " " + currentVideoNum + " selected " + nextVideoSelected
+        text: "State: " + videoPlayer.state + " " + currentVideoNum + " selected " + nextVideoSelected + ' vol ' + videoElement.volume
         z: 20
         anchors.bottom: parent.bottom
     }
